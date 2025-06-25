@@ -2,6 +2,8 @@ import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { AuthDto } from './dto/auth.dto';
+import { Role } from 'generated/prisma';
 
 @Injectable()
 export class AuthService {
@@ -10,19 +12,16 @@ export class AuthService {
     private readonly jwt: JwtService,
   ) {}
 
-  async register(data: {
-    name: string;
-    username: string;
-    email: string;
-    password: string;
-  }) {
-    const hashedPassword = await bcrypt.hash(data.password, 10);
+  async register(dto: AuthDto) {
+    const hashedPassword = await bcrypt.hash(dto.password, 10);
+
     const user = await this.prisma.user.create({
       data: {
-        name: data.name,
-        username: data.username,
-        email: data.email,
+        name: dto.name,
+        username: dto.username,
+        email: dto.email,
         password: hashedPassword,
+        role: dto.role ?? Role.CLIENT, // Usa el rol si viene, si no usa CLIENT
       },
     });
 
@@ -30,14 +29,12 @@ export class AuthService {
   }
 
   async login(email: string, password: string) {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
     const user = await this.prisma.user.findUnique({ where: { email } });
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
+
     if (!user || !(await bcrypt.compare(password, user.password))) {
       throw new UnauthorizedException('Credenciales inválidas');
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
     return this.signToken(user.id, user.email);
   }
 

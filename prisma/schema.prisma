@@ -14,6 +14,11 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum Role {
+  ADMIN
+  CLIENT
+}
+
 model User {
   id       Int     @id @default(autoincrement())
   name     String
@@ -21,6 +26,7 @@ model User {
   email    String  @unique
   image    String?
   password String
+  role     Role    @default(CLIENT)
   active   Boolean @default(true)
 
   createdAt DateTime  @default(now())
