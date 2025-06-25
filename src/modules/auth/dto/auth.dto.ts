@@ -1,5 +1,11 @@
-/* eslint-disable @typescript-eslint/no-unsafe-call */
-import { IsEmail, IsString, MinLength } from 'class-validator';
+import {
+  IsEmail,
+  IsEnum,
+  IsOptional,
+  IsString,
+  MinLength,
+} from 'class-validator';
+import { Role } from 'generated/prisma';
 
 export class AuthDto {
   @IsString()
@@ -12,6 +18,10 @@ export class AuthDto {
   email: string;
 
   @IsString()
-  @MinLength(6)
+  @MinLength(10)
   password: string;
+
+  @IsEnum(Role)
+  @IsOptional()
+  role?: Role; // Por default será CLIENT
 }
