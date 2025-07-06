@@ -7,6 +7,8 @@ import { AuthModule } from './modules/auth/auth.module';
 import { DishesService } from './modules/dishes/dishes.service';
 import { DishesModule } from './modules/dishes/dishes.module';
 import { OrdersModule } from './modules/orders/orders.module';
+import { CategoriesModule } from './modules/categories/categories.module';
+import { TicketsModule } from './modules/tickets/tickets.module';
 
 @Module({
   imports: [
@@ -17,6 +19,8 @@ import { OrdersModule } from './modules/orders/orders.module';
     AuthModule,
     DishesModule,
     OrdersModule,
+    CategoriesModule,
+    TicketsModule,
   ],
   providers: [DishesService],
 })
