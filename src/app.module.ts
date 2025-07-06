@@ -4,6 +4,8 @@ import configuration from './config/configuration';
 import { PrismaModule } from './prisma/prisma.module';
 import { UsersModule } from './modules/users/users.module';
 import { AuthModule } from './modules/auth/auth.module';
+import { DishesService } from './modules/dishes/dishes.service';
+import { DishesModule } from './modules/dishes/dishes.module';
 
 @Module({
   imports: [
@@ -12,6 +14,8 @@ import { AuthModule } from './modules/auth/auth.module';
     PrismaModule,
     UsersModule,
     AuthModule,
+    DishesModule,
   ],
+  providers: [DishesService],
 })
 export class AppModule {}
