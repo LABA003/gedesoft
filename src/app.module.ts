@@ -6,6 +6,7 @@ import { UsersModule } from './modules/users/users.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { DishesService } from './modules/dishes/dishes.service';
 import { DishesModule } from './modules/dishes/dishes.module';
+import { OrdersModule } from './modules/orders/orders.module';
 
 @Module({
   imports: [
@@ -15,6 +16,7 @@ import { DishesModule } from './modules/dishes/dishes.module';
     UsersModule,
     AuthModule,
     DishesModule,
+    OrdersModule,
   ],
   providers: [DishesService],
 })
