@@ -1,27 +1,28 @@
 import {
   IsEmail,
-  IsEnum,
+  IsNotEmpty,
   IsOptional,
   IsString,
   MinLength,
 } from 'class-validator';
 import { Role } from 'generated/prisma';
 
-export class AuthDto {
+export class CreateUserDto {
+  @IsNotEmpty()
   @IsString()
-  name: string;
+  nombreUsu: string;
 
   @IsEmail()
   email: string;
 
+  @IsOptional()
   @IsString()
-  @MinLength(10)
+  imagen?: string;
+
+  @IsNotEmpty()
+  @MinLength(6)
   password: string;
 
   @IsOptional()
-  imagen?: string;
-
-  @IsEnum(Role)
-  @IsOptional()
-  role?: Role; // Por default será CLIENT
+  rol?: Role;
 }

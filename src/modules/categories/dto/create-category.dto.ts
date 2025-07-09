@@ -1,6 +1,9 @@
-import { IsString } from 'class-validator';
+import { IsEnum } from 'class-validator';
+import { TipoCategoria } from 'generated/prisma';
 
 export class CreateCategoryDto {
-  @IsString()
-  nombre: string;
+  @IsEnum(TipoCategoria, {
+    message: `El nombre debe ser uno de: ${Object.values(TipoCategoria).join(', ')}`,
+  })
+  nombre: TipoCategoria;
 }

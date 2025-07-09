@@ -1,4 +1,13 @@
-import { IsInt, IsArray } from 'class-validator';
+import { IsArray, IsInt, ValidateNested } from 'class-validator';
+import { Type } from 'class-transformer';
+
+class OrderItem {
+  @IsInt()
+  idPlatillo: number;
+
+  @IsInt()
+  cantidad: number;
+}
 
 export class CreateOrderDto {
   @IsInt()
@@ -8,5 +17,7 @@ export class CreateOrderDto {
   numMesa: number;
 
   @IsArray()
-  items: { idPlatillo: number; cantidad: number }[];
+  @ValidateNested({ each: true })
+  @Type(() => OrderItem)
+  items: OrderItem[];
 }

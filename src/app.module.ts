@@ -2,26 +2,25 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import configuration from './config/configuration';
 import { PrismaModule } from './prisma/prisma.module';
-import { UsersModule } from './modules/users/users.module';
+import { UsuariosModule } from './modules/users/users.module';
 import { AuthModule } from './modules/auth/auth.module';
-import { DishesService } from './modules/dishes/dishes.service';
-import { DishesModule } from './modules/dishes/dishes.module';
 import { OrdersModule } from './modules/orders/orders.module';
 import { CategoriesModule } from './modules/categories/categories.module';
 import { TicketsModule } from './modules/tickets/tickets.module';
+import { PlatilloModule } from './modules/dishes/dishes.module';
+import { PlatilloService } from './modules/dishes/dishes.service';
 
 @Module({
   imports: [
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
     ConfigModule.forRoot({ isGlobal: true, load: [configuration] }),
     PrismaModule,
-    UsersModule,
+    UsuariosModule,
     AuthModule,
-    DishesModule,
+    PlatilloModule,
     OrdersModule,
     CategoriesModule,
     TicketsModule,
   ],
-  providers: [DishesService],
+  providers: [PlatilloService],
 })
 export class AppModule {}

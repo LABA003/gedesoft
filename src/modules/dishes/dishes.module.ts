@@ -1,7 +1,12 @@
+// File: src/platillo/platillo.module.ts
 import { Module } from '@nestjs/common';
-import { DishesController } from './dishes.controller';
+import { PrismaModule } from 'src/prisma/prisma.module';
+import { PlatilloController } from './dishes.controller';
+import { PlatilloService } from './dishes.service';
 
 @Module({
-  controllers: [DishesController]
+  imports: [PrismaModule],
+  controllers: [PlatilloController],
+  providers: [PlatilloService],
 })
-export class DishesModule {}
+export class PlatilloModule {}

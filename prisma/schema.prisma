@@ -16,19 +16,87 @@ datasource db {
 
 enum Role {
   ADMIN
-  CLIENT
+  MESERO
+  COCINERO
+  CAJERO
 }
 
-model User {
-  id       Int     @id @default(autoincrement())
-  name     String
-  username String  @unique
-  email    String  @unique
-  image    String?
-  password String
-  role     Role    @default(CLIENT)
-  active   Boolean @default(true)
+enum StatusTicket {
+  PENDIENTE
+  PAGADO
+  CANCELADO
+}
 
-  createdAt DateTime  @default(now())
-  updatedAt DateTime?
+enum TipoCategoria {
+  ENTRADA
+  PLATO_FUERTE
+  BEBIDA
+  POSTRE
+  OTRO
+}
+
+model Usuario {
+  idUsuario Int     @id @default(autoincrement())
+  nombreUsu String
+  email     String  @unique
+  imagen    String?
+  password  String
+  rol       Role
+
+  pedidos Pedido[]
+  tickets Ticket[]
+}
+
+model Categoria {
+  idCategoria Int           @id @default(autoincrement())
+  nombre      TipoCategoria
+
+  platillos Platillo[]
+}
+
+model Platillo {
+  idPlatillo     Int        @id @default(autoincrement())
+  nombrePlatillo String
+  ingredientes   String?
+  imagen         String?
+  precio         Float
+  idCategoria    Int?
+  categoria      Categoria? @relation(fields: [idCategoria], references: [idCategoria])
+
+  detallePedidos DetallePedido[]
+}
+
+model Pedido {
+  idPedido  Int      @id @default(autoincrement())
+  idUsuario Int?
+  usuario   Usuario? @relation(fields: [idUsuario], references: [idUsuario])
+  numMesa   Int
+
+  fecha DateTime @default(now())
+
+  detalles DetallePedido[]
+  ticket   Ticket?
+}
+
+model DetallePedido {
+  idPedido   Int
+  idPlatillo Int
+  cantidad   Int @default(1)
+
+  pedido   Pedido   @relation(fields: [idPedido], references: [idPedido])
+  platillo Platillo @relation(fields: [idPlatillo], references: [idPlatillo])
+
+  @@id([idPedido, idPlatillo])
+}
+
+model Ticket {
+  idTicket   Int          @id @default(autoincrement())
+  idPedido   Int?         @unique
+  idUsuario  Int?
+  metodoPago String?
+  total      Float?
+  status     StatusTicket @default(PENDIENTE)
+
+  pedido  Pedido?  @relation(fields: [idPedido], references: [idPedido])
+  usuario Usuario? @relation(fields: [idUsuario], references: [idUsuario])
 }
