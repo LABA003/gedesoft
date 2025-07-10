@@ -15,27 +15,27 @@ export class AuthService {
   async register(dto: AuthDto) {
     const hashedPassword = await bcrypt.hash(dto.password, 10);
 
-    const user = await this.prisma.user.create({
+    const user = await this.prisma.usuario.create({
       data: {
-        name: dto.name,
-        username: dto.username,
+        nombreUsuario: dto.nombreUsuario,
         email: dto.email,
+        imagen: dto.imagen,
         password: hashedPassword,
-        role: dto.role ?? Role.CLIENT, // Usa el rol si viene, si no usa CLIENT
+        rol: dto.rol ?? Role.MESERO,
       },
     });
 
-    return this.signToken(user.id, user.email);
+    return this.signToken(user.idUsuario, user.email);
   }
 
   async login(email: string, password: string) {
-    const user = await this.prisma.user.findUnique({ where: { email } });
+    const user = await this.prisma.usuario.findUnique({ where: { email } });
 
     if (!user || !(await bcrypt.compare(password, user.password))) {
       throw new UnauthorizedException('Credenciales inválidas');
     }
 
-    return this.signToken(user.id, user.email);
+    return this.signToken(user.idUsuario, user.email);
   }
 
   private signToken(userId: number, email: string) {
