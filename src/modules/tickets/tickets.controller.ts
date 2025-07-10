@@ -1,3 +1,4 @@
+
 import {
   Controller,
   Get,
@@ -11,6 +12,7 @@ import { TicketsService } from './tickets.service';
 import { CreateTicketDto } from './dto/create-ticket.dto';
 import { UpdateTicketDto } from './dto/update-ticket.dto';
 
+
 @Controller('tickets')
 export class TicketsController {
   constructor(private readonly ticketsService: TicketsService) {}
@@ -19,6 +21,7 @@ export class TicketsController {
   create(@Body() dto: CreateTicketDto) {
     return this.ticketsService.create(dto);
   }
+
 
   @Get()
   findAll() {
@@ -39,4 +42,5 @@ export class TicketsController {
   remove(@Param('id') id: string) {
     return this.ticketsService.remove(+id);
   }
+
 }

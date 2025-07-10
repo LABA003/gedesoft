@@ -1,14 +1,17 @@
-import { IsOptional, IsInt, IsNumber, IsString } from 'class-validator';
+
+import { IsInt, IsString, IsNumber } from 'class-validator';
 
 export class CreateTicketDto {
   @IsInt()
-  idPedido?: number;
+  idPedido: number;
 
-  //idUsuario?: number;
+  @IsInt()
+  idUsuario: number;
 
   @IsString()
-  metodoPago?: string;
+  metodoPago: string;
 
-  //@IsNumber()
-  //total?: number;
+  @IsNumber()
+  total: number;
+
 }
