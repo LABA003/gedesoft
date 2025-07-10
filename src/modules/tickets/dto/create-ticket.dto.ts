@@ -1,3 +1,4 @@
+
 import { IsInt, IsString, IsNumber } from 'class-validator';
 
 export class CreateTicketDto {
@@ -12,4 +13,5 @@ export class CreateTicketDto {
 
   @IsNumber()
   total: number;
+
 }

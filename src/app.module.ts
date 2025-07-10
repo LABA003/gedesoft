@@ -2,26 +2,32 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import configuration from './config/configuration';
 import { PrismaModule } from './prisma/prisma.module';
-import { UsersModule } from './modules/users/users.module';
+import { UsuariosModule } from './modules/usuarios/usuarios.module';
 import { AuthModule } from './modules/auth/auth.module';
-import { DishesService } from './modules/dishes/dishes.service';
-import { DishesModule } from './modules/dishes/dishes.module';
-import { OrdersModule } from './modules/orders/orders.module';
-import { CategoriesModule } from './modules/categories/categories.module';
+
+import { PlatillosService } from './modules/platillos/platillos.service';
+import { PlatillosModule } from './modules/platillos/platillos.module';
+import { TicketsService } from './modules/tickets/tickets.service';
 import { TicketsModule } from './modules/tickets/tickets.module';
+import { PedidosController } from './modules/pedidos/pedidos.controller';
+import { PedidosModule } from './modules/pedidos/pedidos.module';
+import { PedidosService } from './modules/pedidos/pedidos.service';
+
 
 @Module({
   imports: [
     // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
     ConfigModule.forRoot({ isGlobal: true, load: [configuration] }),
     PrismaModule,
-    UsersModule,
+    UsuariosModule,
     AuthModule,
-    DishesModule,
-    OrdersModule,
-    CategoriesModule,
+
+    PlatillosModule,
     TicketsModule,
+    PedidosModule,
   ],
-  providers: [DishesService],
+  providers: [PlatillosService, TicketsService, PedidosService],
+  controllers: [PedidosController],
+
 })
 export class AppModule {}
