@@ -1,4 +1,24 @@
-import { PartialType } from '@nestjs/mapped-types';
-import { CreatePedidoDto } from './create-pedido.dto';
+import {
+  IsOptional,
+  IsInt,
+  IsArray,
+  ValidateNested,
+  Min,
+} from 'class-validator';
+import { Type } from 'class-transformer';
 
-export class UpdatePedidoDto extends PartialType(CreatePedidoDto) {}
+export class UpdatePlatilloItemDto {
+  @IsInt()
+  idPlatillo: number;
+
+  @IsInt()
+  @Min(1)
+  cantidad: number;
+}
+
+export class UpdatePedidoDto {
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => UpdatePlatilloItemDto)
+  items?: UpdatePlatilloItemDto[];
+}

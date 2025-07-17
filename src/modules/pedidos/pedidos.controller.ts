@@ -8,11 +8,14 @@ import {
   Delete,
   UseGuards,
   Req,
+  ParseIntPipe,
+  Patch,
 } from '@nestjs/common';
 import { PedidosService } from './pedidos.service';
 import { CreatePedidoDto } from './dto/create-pedido.dto';
 import { UpdatePedidoDto } from './dto/update-pedido.dto';
 import { RolesGuard } from 'src/guards/roles.guard';
+import { RemovePlatillosDto } from './dto/remove-platillos.dto';
 
 @Controller('pedidos')
 @UseGuards(RolesGuard)
@@ -34,9 +37,20 @@ export class PedidosController {
     return this.pedidosService.findOne(+id);
   }
 
-  @Put(':id')
-  update(@Param('id') id: string, @Body() data: UpdatePedidoDto) {
-    return this.pedidosService.update(+id, data);
+  @Patch(':idPedido')
+  update(
+    @Param('idPedido', ParseIntPipe) idPedido: number,
+    @Body() dto: UpdatePedidoDto,
+  ) {
+    return this.pedidosService.update(idPedido, dto);
+  }
+
+  @Patch(':idPedido/eliminar-platillos')
+  removePlatillos(
+    @Param('idPedido', ParseIntPipe) idPedido: number,
+    @Body() dto: RemovePlatillosDto,
+  ) {
+    return this.pedidosService.removePlatillosDelPedido(idPedido, dto);
   }
 
   @Delete(':id')
