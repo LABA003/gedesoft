@@ -1,4 +1,3 @@
-
 import {
   Injectable,
   NotFoundException,
@@ -8,11 +7,9 @@ import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateTicketDto } from './dto/create-ticket.dto';
 import { UpdateTicketDto } from './dto/update-ticket.dto';
 
-
 @Injectable()
 export class TicketsService {
   constructor(private readonly prisma: PrismaService) {}
-
 
   async create(dto: CreateTicketDto) {
     // Buscar pedido
@@ -68,7 +65,18 @@ export class TicketsService {
   }
 
   findOne(id: number) {
-    return this.prisma.ticket.findUnique({ where: { idTicket: id } });
+    return this.prisma.ticket.findUnique({
+      where: { idTicket: id },
+      include: {
+        pedido: {
+          include: {
+            detalles: {
+              include: { platillo: true },
+            },
+          },
+        },
+      },
+    });
   }
 
   async update(id: number, data: UpdateTicketDto) {
@@ -84,6 +92,5 @@ export class TicketsService {
   private async findOneOrFail(id: number) {
     const ticket = await this.findOne(id);
     if (!ticket) throw new NotFoundException('Ticket no encontrado');
-
   }
 }
