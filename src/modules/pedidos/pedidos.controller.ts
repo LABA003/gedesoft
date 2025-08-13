@@ -14,17 +14,18 @@ import {
 import { PedidosService } from './pedidos.service';
 import { CreatePedidoDto } from './dto/create-pedido.dto';
 import { UpdatePedidoDto } from './dto/update-pedido.dto';
-import { RolesGuard } from 'src/guards/roles.guard';
+import { RolesGuard } from '../../guards/roles.guard';
 import { RemovePlatillosDto } from './dto/remove-platillos.dto';
+import { AuthGuard } from '@nestjs/passport';
 
 @Controller('pedidos')
 @UseGuards(RolesGuard)
 export class PedidosController {
-  constructor(private readonly pedidosService: PedidosService) {}
-
+  constructor(private readonly pedidosService: PedidosService) { }
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
   @Post('create')
-  create(@Body() dto: CreatePedidoDto, @Req() req: Request & { user: any }) {
-    return this.pedidosService.create(dto, req.user as any);
+  create(@Body() dto: CreatePedidoDto, @Req() req: Request & { user: string }) {
+    return this.pedidosService.create(dto, req.user);
   }
 
   @Get()
