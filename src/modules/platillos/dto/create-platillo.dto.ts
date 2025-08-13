@@ -5,7 +5,7 @@ import {
   IsEnum,
   IsBoolean,
 } from 'class-validator';
-import { TipoCategoria } from 'generated/prisma';
+import { TipoCategoria } from '../../../../generated/prisma';
 
 export class CreatePlatilloDto {
   @IsString()

@@ -12,6 +12,7 @@ import { TicketsModule } from './modules/tickets/tickets.module';
 import { PedidosController } from './modules/pedidos/pedidos.controller';
 import { PedidosModule } from './modules/pedidos/pedidos.module';
 import { PedidosService } from './modules/pedidos/pedidos.service';
+import { AppController } from './app.controller';
 
 
 @Module({
@@ -27,7 +28,7 @@ import { PedidosService } from './modules/pedidos/pedidos.service';
     PedidosModule,
   ],
   providers: [PlatillosService, TicketsService, PedidosService],
-  controllers: [PedidosController],
+  controllers: [PedidosController, AppController],
 
 })
 export class AppModule {}

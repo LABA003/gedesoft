@@ -6,7 +6,7 @@ import {
   IsOptional,
   ValidateNested,
 } from 'class-validator';
-import { StatusPedido } from 'generated/prisma';
+import { StatusPedido } from '../../../../generated/prisma';
 import { Type } from 'class-transformer';
 
 class OrderItem {
@@ -18,17 +18,17 @@ class OrderItem {
 }
 
 export class CreatePedidoDto {
-  @IsInt()
-  idUsuario?: number;
+  //@IsInt()
+  //idUsuario?: number;
 
   @IsInt()
   numMesa: number;
 
-  @IsDateString()
-  fecha?: string;
+  //@IsDateString()
+  //fecha?: string;
 
-  @IsEnum(StatusPedido)
-  status?: StatusPedido;
+ // @IsEnum(StatusPedido)
+  //status?: StatusPedido;
 
   @IsArray()
   @ValidateNested({ each: true })

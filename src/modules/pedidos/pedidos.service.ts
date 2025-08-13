@@ -1,5 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { PrismaService } from 'src/prisma/prisma.service';
+import { PrismaService } from '../../prisma/prisma.service';
 import { CreatePedidoDto } from './dto/create-pedido.dto';
 import { UpdatePedidoDto } from './dto/update-pedido.dto';
 import { RemovePlatillosDto } from './dto/remove-platillos.dto';
@@ -7,21 +7,14 @@ import { UpdateStatusDto } from './dto/update-status.dto';
 
 @Injectable()
 export class PedidosService {
-  constructor(private prisma: PrismaService) {}
+  constructor(private readonly prisma: PrismaService) {}
 
   async create(dto: CreatePedidoDto, user: any) {
-    // Verificar que el usuario exista
-    const usuario = await this.prisma.usuario.findUnique({
-      where: { idUsuario: dto.idUsuario },
-    });
-    if (!usuario) {
-      throw new NotFoundException(`Usuario ${dto.idUsuario} no encontrado`);
-    }
-
+   
     // Crear pedido
     const pedido = await this.prisma.pedido.create({
       data: {
-        idUsuario: dto.idUsuario,
+        idUsuario: user.sub, 
         numMesa: dto.numMesa,
       },
     });
