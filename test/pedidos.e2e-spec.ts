@@ -3,7 +3,7 @@ import { INestApplication, ValidationPipe } from '@nestjs/common';
 import * as request from 'supertest';
 import { AppModule } from '../src/app.module';
 
-describe('PedidosController (e2e)', () => {
+describe('Pedidos con verificación de usuario (e2e)', () => {
   let app: INestApplication;
   let token: string;
   let platillos: any[];

@@ -6,7 +6,7 @@ import { StatusPedido } from './dto/update-status.dto';
 
 describe('PedidosService', () => {
   let service: PedidosService;
-  let prisma: any; 
+  let prisma: any;
 
   const mockPrisma = {
     usuario: {
@@ -48,15 +48,22 @@ describe('PedidosService', () => {
   describe('create', () => {
     it('should throw if user does not exist', async () => {
       prisma.usuario.findUnique.mockResolvedValue(null);
-
+      const fakeUser = { sub: 1 };
       await expect(
-        service.create({ idUsuario: 1, numMesa: 5, items: [] }, {}),
+        service.create({ numMesa: 5, items: [] }, fakeUser),
       ).rejects.toThrow(NotFoundException);
     });
 
+    it('should throw if user does not exist', async () => {
+      await expect(
+        service.create({ numMesa: 5, items: [] }, null), // pasar null o undefined para simular user inexistente
+      ).rejects.toThrow(NotFoundException);
+    });
+    
     it('should create pedido and return full response', async () => {
+      const fakeUser = { sub: 1 }; // Usuario existente en la BD
       const dto = {
-        idUsuario: 1,
+
         numMesa: 5,
         items: [{ idPlatillo: 10, cantidad: 2 }],
       };
@@ -69,7 +76,7 @@ describe('PedidosService', () => {
       prisma.detallePedido.create.mockResolvedValue({});
       prisma.pedido.findUnique.mockResolvedValue(pedidoCompleto);
 
-      const result = await service.create(dto, {});
+      const result = await service.create(dto, fakeUser);
 
       expect(result).toEqual({
         message: 'Pedido creado correctamente',
@@ -153,30 +160,30 @@ describe('PedidosService', () => {
   });
 
   describe('actualizarEstado', () => {
-  it('should throw if pedido not found', async () => {
-    prisma.pedido.findUnique.mockResolvedValue(null);
+    it('should throw if pedido not found', async () => {
+      prisma.pedido.findUnique.mockResolvedValue(null);
 
-    await expect(
-      service.actualizarEstado(1, { estado: StatusPedido.ENTREGADO }),
-    ).rejects.toThrow(new NotFoundException('Pedido 1 no encontrado'));
-  });
-
-  it('should update estado and return pedido', async () => {
-    const pedidoActualizado = { idPedido: 1, status: StatusPedido.ENTREGADO };
-
-    prisma.pedido.findUnique.mockResolvedValue({ idPedido: 1 });
-    prisma.pedido.update.mockResolvedValue(pedidoActualizado);
-
-    const result = await service.actualizarEstado(1, {
-      estado: StatusPedido.ENTREGADO,
+      await expect(
+        service.actualizarEstado(1, { estado: StatusPedido.ENTREGADO }),
+      ).rejects.toThrow(new NotFoundException('Pedido 1 no encontrado'));
     });
 
-    expect(result).toEqual({
-      message: 'Estado del pedido actualizado a ENTREGADO',
-      pedido: pedidoActualizado,
+    it('should update estado and return pedido', async () => {
+      const pedidoActualizado = { idPedido: 1, status: StatusPedido.ENTREGADO };
+
+      prisma.pedido.findUnique.mockResolvedValue({ idPedido: 1 });
+      prisma.pedido.update.mockResolvedValue(pedidoActualizado);
+
+      const result = await service.actualizarEstado(1, {
+        estado: StatusPedido.ENTREGADO,
+      });
+
+      expect(result).toEqual({
+        message: 'Estado del pedido actualizado a ENTREGADO',
+        pedido: pedidoActualizado,
+      });
     });
   });
-});
 
   describe('remove', () => {
     it('should throw if pedido not found', async () => {
