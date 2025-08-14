@@ -41,7 +41,7 @@ describe('PedidosController', () => {
 
   describe('create', () => {
     it('should call service.create with dto and user', async () => {
-      const dto: CreatePedidoDto = {idUsuario: 1, numMesa: 5, items: [{ idPlatillo: 1, cantidad: 2 }]};
+      const dto: CreatePedidoDto = { numMesa: 5, items: [{ idPlatillo: 1, cantidad: 2 }]};
       const user = { idUsuario: 1 };
       const req = { user } as any;
 

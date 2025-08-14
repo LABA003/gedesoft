@@ -7,14 +7,16 @@ import { UpdateStatusDto } from './dto/update-status.dto';
 
 @Injectable()
 export class PedidosService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(private readonly prisma: PrismaService) { }
 
   async create(dto: CreatePedidoDto, user: any) {
-   
+    if (!user?.sub) {
+      throw new NotFoundException('Usuario no encontrado');
+    }
     // Crear pedido
     const pedido = await this.prisma.pedido.create({
       data: {
-        idUsuario: user.sub, 
+        idUsuario: user.sub,
         numMesa: dto.numMesa,
       },
     });
@@ -29,7 +31,9 @@ export class PedidosService {
         },
       });
     }
-
+    if (!pedido) {
+      throw new NotFoundException('Pedido no creado');
+    }
     // Obtener detalles completos
     const pedidoCompleto = await this.prisma.pedido.findUnique({
       where: { idPedido: pedido.idPedido },

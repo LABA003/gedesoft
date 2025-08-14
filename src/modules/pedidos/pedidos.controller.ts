@@ -17,22 +17,27 @@ import { UpdatePedidoDto } from './dto/update-pedido.dto';
 import { RolesGuard } from '../../guards/roles.guard';
 import { RemovePlatillosDto } from './dto/remove-platillos.dto';
 import { AuthGuard } from '@nestjs/passport';
-
+import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
+@ApiBearerAuth()
+@ApiTags('pedidos')
 @Controller('pedidos')
-@UseGuards(RolesGuard)
+@UseGuards(AuthGuard('jwt'), RolesGuard)
 export class PedidosController {
   constructor(private readonly pedidosService: PedidosService) { }
-  @UseGuards(AuthGuard('jwt'), RolesGuard)
+  
+  @ApiOperation({ summary: 'Create a new pedido' })
   @Post('create')
-  create(@Body() dto: CreatePedidoDto, @Req() req: Request & { user: string }) {
+  create(@Body() dto: CreatePedidoDto, @Req() req: Request & { user: any }) {
     return this.pedidosService.create(dto, req.user);
   }
 
+  @ApiOperation({ summary: 'Get all pedidos' })
   @Get()
   findAll() {
     return this.pedidosService.findAll();
   }
 
+  @ApiOperation({ summary:'get pedido by id'})
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.pedidosService.findOne(+id);
