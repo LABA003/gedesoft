@@ -27,8 +27,8 @@ describe('Pedidos con verificación de usuario (e2e)', () => {
 
   it('/POST auth/login → obtiene token', async () => {
     const dto = {
-      email: 'lbaro@gmail.com',
-      password: '1234567890',
+      email: 'test@gmail.com',
+      password: '12345678910',
     };
 
     const { body } = await request(app.getHttpServer())
