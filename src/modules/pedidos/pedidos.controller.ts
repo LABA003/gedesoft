@@ -17,7 +17,8 @@ import { UpdatePedidoDto } from './dto/update-pedido.dto';
 import { RolesGuard } from '../../guards/roles.guard';
 import { RemovePlatillosDto } from './dto/remove-platillos.dto';
 import { AuthGuard } from '@nestjs/passport';
-import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiCreatedResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
+
 @ApiBearerAuth()
 @ApiTags('pedidos')
 @Controller('pedidos')
@@ -26,6 +27,7 @@ export class PedidosController {
   constructor(private readonly pedidosService: PedidosService) { }
   
   @ApiOperation({ summary: 'Create a new pedido' })
+  @ApiCreatedResponse({ type: CreatePedidoDto})
   @Post('create')
   create(@Body() dto: CreatePedidoDto, @Req() req: Request & { user: any }) {
     return this.pedidosService.create(dto, req.user);
