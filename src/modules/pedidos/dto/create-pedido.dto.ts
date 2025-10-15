@@ -28,7 +28,7 @@ export class CreatePedidoDto {
 
  // @IsEnum(StatusPedido)
   //status?: StatusPedido;
-
+  @ApiProperty({ description: 'Lista de platillos del pedido' })
   @IsArray()
   @ValidateNested({ each: true })
   @Type(() => OrderItem)
