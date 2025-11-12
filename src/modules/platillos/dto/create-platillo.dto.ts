@@ -17,6 +17,7 @@ export class CreatePlatilloDto {
   @IsString()
   descripcion?: string;
 
+  @ApiProperty({description: 'Imagen del platillo', required: false})
   @IsOptional()
   @IsString()
   imagen?: string;

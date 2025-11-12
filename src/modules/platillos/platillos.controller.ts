@@ -6,6 +6,7 @@ import {
   Param,
   Put,
   Delete,
+  UseGuards,
 } from '@nestjs/common';
 import { PlatillosService } from './platillos.service';
 import { CreatePlatilloDto } from './dto/create-platillo.dto';
@@ -15,6 +16,7 @@ import { ApiBearerAuth, ApiCreatedResponse, ApiOperation, ApiTags } from '@nestj
 @ApiBearerAuth()
 @ApiTags('platillos')
 @Controller('platillos')
+
 export class PlatillosController {
   constructor(private readonly platillosService: PlatillosService) {}
   /**
