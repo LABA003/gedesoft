@@ -1,9 +1,10 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
 import { CreatePedidoDto } from './dto/create-pedido.dto';
 import { UpdatePedidoDto } from './dto/update-pedido.dto';
 import { RemovePlatillosDto } from './dto/remove-platillos.dto';
 import { UpdateStatusDto } from './dto/update-status.dto';
+import { StatusPedido, TipoCategoria } from 'generated/prisma';
 
 @Injectable()
 export class PedidosService {
@@ -201,5 +202,47 @@ export class PedidosService {
   private async findOneOrFail(id: number) {
     const pedido = await this.findOne(id);
     if (!pedido) throw new NotFoundException('Pedido no encontrado');
+  }
+
+  async findPendientesPorCategoria(categoria: string) {
+    if (!Object.values(TipoCategoria).includes(categoria as TipoCategoria)) {
+      throw new BadRequestException(`Categoría '${categoria}' no es válida.`);
+    }
+
+    // 2. AJUSTE DE ESTADO: Tu Enum 'StatusPedido' solo tiene PENDIENTE.
+    // Si agregas 'EN_PREPARACION' a tu schema, puedes añadirlo aquí.
+    const estadosPendientes: StatusPedido[] = [StatusPedido.PENDIENTE];
+
+    return this.prisma.detallePedido.findMany({
+      where: {
+        // 3. Filtra por el estado del pedido (usando el Enum)
+        pedido: {
+          status: {
+            in: estadosPendientes,
+          },
+        },
+        // 4. Filtra por la categoría del platillo (casteando string a Enum)
+        platillo: {
+          categoria: categoria as TipoCategoria,
+        },
+      },
+      include: {
+        platillo: true, // Incluye la info del platillo (nombre, etc.)
+        pedido: {
+          // Incluye solo la info necesaria del pedido (mesa, status)
+          select: {
+            idPedido: true,
+            numMesa: true,
+            status: true,
+          },
+        },
+      },
+      orderBy: {
+        // 5. Ordena por el campo 'fecha' (corregido de 'createdAt')
+        pedido: {
+          fecha: 'asc',
+        },
+      },
+    });
   }
 }
