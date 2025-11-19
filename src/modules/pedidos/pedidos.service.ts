@@ -5,10 +5,14 @@ import { UpdatePedidoDto } from './dto/update-pedido.dto';
 import { RemovePlatillosDto } from './dto/remove-platillos.dto';
 import { UpdateStatusDto } from './dto/update-status.dto';
 import { StatusPedido, TipoCategoria } from 'generated/prisma';
+import { PedidosGateway } from './pedidos.gateway';
 
 @Injectable()
 export class PedidosService {
-  constructor(private readonly prisma: PrismaService) { }
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly pedidosGateway: PedidosGateway
+  ) { }
 
   async create(dto: CreatePedidoDto, user: any) {
     if (!user?.sub) {
@@ -48,6 +52,10 @@ export class PedidosService {
       },
     });
 
+    if (pedidoCompleto) {
+      this.pedidosGateway.emitirNuevoPedido(pedidoCompleto);
+    }
+
     return {
       message: 'Pedido creado correctamente',
       pedido: pedidoCompleto,
@@ -55,7 +63,17 @@ export class PedidosService {
   }
 
   findAll() {
-    return this.prisma.pedido.findMany();
+    //return this.prisma.pedido.findMany();
+    return this.prisma.pedido.findMany({
+      include: {
+        detalles: {
+          include: {
+            platillo: true, // Incluye la info del platillo
+          },
+        },
+        usuario: true // Opcional, pero bueno tenerlo
+      },
+    });
   }
 
   findOne(id: number) {
@@ -93,13 +111,46 @@ export class PedidosService {
           );
         }
 
-        await this.prisma.detallePedido.create({
+        /*await this.prisma.detallePedido.create({
           data: {
             idPedido,
             idPlatillo: item.idPlatillo,
             cantidad: item.cantidad,
           },
+        });*/
+        //definir llave primaria compuesta que se buscara
+        const compositeId = {
+          idPedido: idPedido,
+          idPlatillo: item.idPlatillo,
+        }
+
+        //buscar si ese platillo ya existe en ese pedido
+        const detalleExistente = await this.prisma.detallePedido.findUnique({
+          //prisma genera automaticamente el metodo findUnique para llaves compuestas
+          where: { idPedido_idPlatillo: compositeId}
         });
+
+        if (detalleExistente) {
+          await this.prisma.detallePedido.update({
+            where: { idPedido_idPlatillo: compositeId},
+            data:{
+              cantidad:{
+                increment: item.cantidad,
+              },
+            },
+          });
+          
+        }
+        else {
+          await this.prisma.detallePedido.create({
+            data:{
+              idPedido : idPedido,
+              idPlatillo: item.idPlatillo,
+              cantidad: item.cantidad,
+            },
+          });
+        }
+
       }
     }
 
