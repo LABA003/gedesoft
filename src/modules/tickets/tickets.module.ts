@@ -3,10 +3,15 @@ import { TicketsService } from './tickets.service';
 import { TicketsController } from './tickets.controller';
 
 import { PrismaService } from '../../prisma/prisma.service';
+import { TicketsGateway } from './tickets.gateway';
 
 @Module({
   controllers: [TicketsController],
-  providers: [TicketsService, PrismaService],
+  providers: [
+    TicketsService, 
+    PrismaService, 
+    TicketsGateway
+  ],
 
 })
 export class TicketsModule {}
