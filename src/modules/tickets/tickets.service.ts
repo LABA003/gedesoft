@@ -6,10 +6,14 @@ import {
 import { PrismaService } from '../../prisma/prisma.service';
 import { CreateTicketDto } from './dto/create-ticket.dto';
 import { UpdateTicketDto } from './dto/update-ticket.dto';
+import { TicketsGateway } from './tickets.gateway';
 
 @Injectable()
 export class TicketsService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly ticketsGateway: TicketsGateway,
+  ) {}
 
   async create(dto: CreateTicketDto) {
     // Buscar pedido
@@ -56,6 +60,8 @@ export class TicketsService {
         },
       },
     });
+
+    this.ticketsGateway.emitirNuevoTicket(ticket);
 
     return ticket;
   }

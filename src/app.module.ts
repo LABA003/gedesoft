@@ -14,6 +14,7 @@ import { PedidosModule } from './modules/pedidos/pedidos.module';
 import { PedidosService } from './modules/pedidos/pedidos.service';
 import { AppController } from './app.controller';
 import { PedidosGateway } from './modules/pedidos/pedidos.gateway';
+import { TicketsGateway } from './modules/tickets/tickets.gateway';
 
 
 @Module({
@@ -28,7 +29,13 @@ import { PedidosGateway } from './modules/pedidos/pedidos.gateway';
     TicketsModule,
     PedidosModule,
   ],
-  providers: [PlatillosService, TicketsService, PedidosService,PedidosGateway],
+  providers: [
+    PlatillosService, 
+    TicketsService, 
+    PedidosService,
+    PedidosGateway,
+    TicketsGateway
+  ],
   controllers: [PedidosController, AppController],
 
 })
