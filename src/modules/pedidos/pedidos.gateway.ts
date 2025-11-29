@@ -26,4 +26,17 @@ export class PedidosGateway {
         // Este evento se reemite a todos los meseros
         this.server.emit('pedido_listo_notificacion', data);
     }
+
+    /*@SubscribeMessage('pedido_entregado_mesero')
+    handlePedidoEntregado(@MessageBody() data: { pedidoId: number }) {
+        // Retransmitimos el evento a todos (incluida la cocina)
+        this.server.emit('pedido_finalizado_cocina', data);
+    }*/
+    @SubscribeMessage('pedido_entregado_mesero')
+    handlePedidoEntregado(@MessageBody() data: { pedidoId: number }) {
+        console.log(`Mesero entregó pedido #${data.pedidoId}. Avisando a cocina...`);
+
+        // Le gritamos a la pantalla de COCINA que quite ese pedido
+        this.server.emit('pedido_finalizado_cocina', data);
+    }
 }

@@ -13,7 +13,7 @@ export class TicketsService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly ticketsGateway: TicketsGateway,
-  ) {}
+  ) { }
 
   async create(dto: CreateTicketDto) {
     // Buscar pedido
@@ -62,12 +62,27 @@ export class TicketsService {
     });
 
     this.ticketsGateway.emitirNuevoTicket(ticket);
+    await this.prisma.pedido.update({
+      where: { idPedido: dto.idPedido },
+      data: { status: 'PAGADO' }
+    });
 
     return ticket;
   }
 
   findAll() {
-    return this.prisma.ticket.findMany();
+    // return this.prisma.ticket.findMany();
+    return this.prisma.ticket.findMany({
+      orderBy: { idTicket: 'desc' }, // Los más nuevos primero
+      include: {
+        pedido: {
+          include: {
+            detalles: { include: { platillo: true } } // Necesario para re-imprimir detalles
+          }
+        },
+        usuario: true
+      }
+    });
   }
 
   findOne(id: number) {
