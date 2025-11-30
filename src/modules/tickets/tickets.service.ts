@@ -62,10 +62,10 @@ export class TicketsService {
     });
 
     this.ticketsGateway.emitirNuevoTicket(ticket);
-    await this.prisma.pedido.update({
+    /*await this.prisma.pedido.update({
       where: { idPedido: dto.idPedido },
       data: { status: 'PAGADO' }
-    });
+    });*/
 
     return ticket;
   }
@@ -77,7 +77,7 @@ export class TicketsService {
       include: {
         pedido: {
           include: {
-            detalles: { include: { platillo: true } } // Necesario para re-imprimir detalles
+            detalles: { include: { platillo: true } } ,
           }
         },
         usuario: true
