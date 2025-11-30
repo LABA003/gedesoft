@@ -71,7 +71,8 @@ export class PedidosService {
             platillo: true, // Incluye la info del platillo
           },
         },
-        usuario: true // Opcional, pero bueno tenerlo
+        usuario: true, 
+        ticket: true,
       },
     });
   }
